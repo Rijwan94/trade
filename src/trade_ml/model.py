@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 import numpy as np
 import pandas as pd
@@ -28,8 +28,16 @@ FEATURE_COLUMNS = [
 
 @dataclass
 class DualTaskModel:
-    classifier: CalibratedClassifierCV = CalibratedClassifierCV(RandomForestClassifier(n_estimators=200, random_state=42), method="sigmoid", cv=3)
-    regressor: GradientBoostingRegressor = GradientBoostingRegressor(random_state=42)
+    classifier: CalibratedClassifierCV = field(
+        default_factory=lambda: CalibratedClassifierCV(
+            RandomForestClassifier(n_estimators=200, random_state=42),
+            method="sigmoid",
+            cv=3,
+        )
+    )
+    regressor: GradientBoostingRegressor = field(
+        default_factory=lambda: GradientBoostingRegressor(random_state=42)
+    )
 
     def fit(self, frame: pd.DataFrame, horizon: int) -> None:
         x, y_direction, y_price = prepare_training_data(frame, horizon)

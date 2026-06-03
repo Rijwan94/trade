@@ -48,8 +48,8 @@ class FeatureCache:
 class InferenceService:
     model: DualTaskModel
     targets: ModelTargets
-    cache: FeatureCache = FeatureCache()
-    monitor: MetricsMonitor = MetricsMonitor()
+    cache: FeatureCache = field(default_factory=FeatureCache)
+    monitor: MetricsMonitor = field(default_factory=MetricsMonitor)
 
     def predict(self, asset: str, market_frame: pd.DataFrame) -> dict[str, Any]:
         started = time.perf_counter()

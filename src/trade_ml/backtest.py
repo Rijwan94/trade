@@ -6,7 +6,7 @@ import numpy as np
 import pandas as pd
 
 from .features import make_feature_table
-from .model import DualTaskModel, prepare_training_data
+from .model import FEATURE_COLUMNS, DualTaskModel, prepare_training_data
 
 
 @dataclass
@@ -18,7 +18,10 @@ class BacktestResult:
 
 
 def run_backtest(frame: pd.DataFrame, horizon: int, confidence_threshold: float) -> BacktestResult:
-    features = make_feature_table(frame)
+    if set(FEATURE_COLUMNS).issubset(frame.columns):
+        features = frame.copy()
+    else:
+        features = make_feature_table(frame)
     x, y_direction, _ = prepare_training_data(features, horizon)
 
     split = int(len(x) * 0.8)

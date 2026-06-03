@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Optional, Protocol
 
 import pandas as pd
@@ -35,7 +35,7 @@ class DataAuditor:
 class UnifiedDataPipeline:
     primary: DataProvider
     fallback: Optional[DataProvider] = None
-    auditor: DataAuditor = DataAuditor()
+    auditor: DataAuditor = field(default_factory=DataAuditor)
 
     def load_historical(
         self,
